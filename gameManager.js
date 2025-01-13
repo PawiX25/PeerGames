@@ -29,6 +29,9 @@ class GameManager {
             case 'chess':
                 this.currentGame = new Chess(this);
                 break;
+            case 'connectfour':
+                this.currentGame = new ConnectFour(this);
+                break;
         }
 
         if (this.connectionManager.isHost) {

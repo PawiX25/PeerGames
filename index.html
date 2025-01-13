@@ -22,6 +22,44 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .piece {
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        background-color 0.3s ease;
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+        
+        @keyframes dropBounce {
+            0% { transform: translateY(-400%) scale(1); }
+            70% { transform: translateY(0) scale(1.1); }
+            85% { transform: translateY(-10%) scale(0.95); }
+            100% { transform: translateY(0) scale(1); }
+        }
+        
+        .piece.dropping {
+            animation: dropBounce 0.5s forwards;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0.3);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .piece-animation {
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+
+        [data-index] {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-screen">
@@ -90,6 +128,24 @@
                     <i class="fas fa-user-friends"></i> 2 players
                 </div>
             </div>
+
+            <div class="game-card bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl cursor-pointer border border-gray-700"
+                 data-game="connectfour">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-circle text-2xl text-yellow-500"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold">Connect Four</h3>
+                        <p class="text-gray-400">Classic vertical strategy game</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-400">
+                    <i class="fas fa-clock"></i> 5-10 min
+                    <span class="mx-2">•</span>
+                    <i class="fas fa-user-friends"></i> 2 players
+                </div>
+            </div>
         </div>
 
         <div id="game-container" class="hidden fade-in">
@@ -112,5 +168,6 @@
     <script src="gameManager.js"></script>
     <script src="games/tictactoe.js"></script>
     <script src="games/chess.js"></script>
+    <script src="games/connectfour.js"></script>
 </body>
 </html>
