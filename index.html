@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerGames - P2P Gaming Platform</title>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .game-card {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
+                PeerGames
+            </h1>
+            <p class="text-gray-400 text-xl">Connect & Play Instantly</p>
+        </header>
+
+        <div id="connection-section" class="mb-12 fade-in">
+            <div class="max-w-lg mx-auto bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl shadow-2xl border border-gray-700">
+                <div id="peer-id" class="mb-6 text-center"></div>
+                <div class="flex flex-col gap-4">
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                            <i class="fas fa-user-plus text-gray-400"></i>
+                        </span>
+                        <input type="text" id="connect-id" 
+                               placeholder="Enter friend's Peer ID" 
+                               class="w-full pl-10 pr-4 py-3 bg-gray-700/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                    </div>
+                    <button id="connect-btn" 
+                            class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center gap-2">
+                        <i class="fas fa-plug"></i>
+                        Connect
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-selection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 hidden fade-in">
+            <div class="game-card bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl cursor-pointer border border-gray-700"
+                 data-game="tictactoe">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-hashtag text-2xl text-blue-500"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold">Tic Tac Toe</h3>
+                        <p class="text-gray-400">Classic 3x3 game</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-400">
+                    <i class="fas fa-clock"></i> 2-5 min
+                    <span class="mx-2">•</span>
+                    <i class="fas fa-user-friends"></i> 2 players
+                </div>
+            </div>
+
+            <div class="game-card bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl cursor-pointer border border-gray-700"
+                 data-game="chess">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-chess-king text-2xl text-purple-500"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold">Chess</h3>
+                        <p class="text-gray-400">Traditional chess game</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-400">
+                    <i class="fas fa-clock"></i> 10-30 min
+                    <span class="mx-2">•</span>
+                    <i class="fas fa-user-friends"></i> 2 players
+                </div>
+            </div>
+        </div>
+
+        <div id="game-container" class="hidden fade-in">
+            <div class="flex items-center justify-between mb-6">
+                <button id="leave-game" 
+                        class="bg-red-600/80 px-6 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2">
+                    <i class="fas fa-door-open"></i>
+                    Leave Game
+                </button>
+                <div id="player-status" class="bg-gray-800/50 px-4 py-2 rounded-lg">
+                    <i class="fas fa-circle text-green-500"></i>
+                    <span class="ml-2">Connected</span>
+                </div>
+            </div>
+            <div id="game-board" class="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700 shadow-2xl"></div>
+        </div>
+    </div>
+
+    <script src="connection.js"></script>
+    <script src="gameManager.js"></script>
+    <script src="games/tictactoe.js"></script>
+    <script src="games/chess.js"></script>
+</body>
+</html>
