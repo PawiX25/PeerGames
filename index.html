@@ -71,28 +71,7 @@
             <p class="text-gray-400 text-xl">Connect & Play Instantly</p>
         </header>
 
-        <div id="connection-section" class="mb-12 fade-in">
-            <div class="max-w-lg mx-auto bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl shadow-2xl border border-gray-700">
-                <div id="peer-id" class="mb-6 text-center"></div>
-                <div class="flex flex-col gap-4">
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                            <i class="fas fa-user-plus text-gray-400"></i>
-                        </span>
-                        <input type="text" id="connect-id" 
-                               placeholder="Enter friend's Peer ID" 
-                               class="w-full pl-10 pr-4 py-3 bg-gray-700/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-                    </div>
-                    <button id="connect-btn" 
-                            class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center gap-2">
-                        <i class="fas fa-plug"></i>
-                        Connect
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="game-selection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 hidden fade-in">
+        <div id="game-selection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 fade-in">
             <div class="game-card bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl cursor-pointer border border-gray-700"
                  data-game="tictactoe">
                 <div class="flex items-center gap-4 mb-4">
@@ -162,6 +141,27 @@
                     <i class="fas fa-clock"></i> 5-10 min
                     <span class="mx-2">•</span>
                     <i class="fas fa-user-friends"></i> 2 players
+                </div>
+            </div>
+        </div>
+
+        <div id="connection-section" class="mb-12 fade-in hidden">
+            <div class="max-w-lg mx-auto bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl shadow-2xl border border-gray-700">
+                <div id="peer-id" class="mb-6 text-center"></div>
+                <div class="flex flex-col gap-4">
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                            <i class="fas fa-user-plus text-gray-400"></i>
+                        </span>
+                        <input type="text" id="connect-id" 
+                               placeholder="Enter friend's Peer ID" 
+                               class="w-full pl-10 pr-4 py-3 bg-gray-700/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                    </div>
+                    <button id="connect-btn" 
+                            class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center gap-2">
+                        <i class="fas fa-plug"></i>
+                        Connect
+                    </button>
                 </div>
             </div>
         </div>

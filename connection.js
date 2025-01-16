@@ -1,9 +1,9 @@
 class ConnectionManager {
-    constructor() {
+    constructor(gameManager) {
         this.peer = new Peer();
         this.connection = null;
         this.isHost = false;
-        this.gameManager = null;
+        this.gameManager = gameManager;
 
         this.setupPeer();
         this.setupUI();
@@ -33,11 +33,8 @@ class ConnectionManager {
 
     setupConnection() {
         this.connection.on('open', () => {
-            document.getElementById('connection-section').classList.add('hidden');
-            document.getElementById('game-selection').classList.remove('hidden');
-            
-            if (!this.gameManager) {
-                this.gameManager = new GameManager(this);
+            if (this.gameManager.selectedGame) {
+                this.gameManager.startGame(this.gameManager.selectedGame);
             }
 
             this.sendMessage({

@@ -1,7 +1,8 @@
 class GameManager {
-    constructor(connectionManager) {
-        this.connectionManager = connectionManager;
+    constructor() {
+        this.connectionManager = null;
         this.currentGame = null;
+        this.selectedGame = null;
         this.setupEventListeners();
     }
 
@@ -9,7 +10,12 @@ class GameManager {
         document.querySelectorAll('.game-card').forEach(card => {
             card.addEventListener('click', () => {
                 const gameType = card.dataset.game;
-                this.startGame(gameType);
+                this.selectedGame = gameType;
+                document.getElementById('game-selection').classList.add('hidden');
+                document.getElementById('connection-section').classList.remove('hidden');
+                if (!this.connectionManager) {
+                    this.connectionManager = new ConnectionManager(this);
+                }
             });
         });
 
@@ -19,7 +25,7 @@ class GameManager {
     }
 
     startGame(gameType) {
-        document.getElementById('game-selection').classList.add('hidden');
+        document.getElementById('connection-section').classList.add('hidden');
         document.getElementById('game-container').classList.remove('hidden');
 
         if (this.currentGame) {
@@ -83,3 +89,5 @@ class GameManager {
         document.getElementById('game-board').innerHTML = '';
     }
 }
+
+new GameManager();
