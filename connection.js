@@ -39,9 +39,16 @@ class ConnectionManager {
             if (!this.gameManager) {
                 this.gameManager = new GameManager(this);
             }
+
+            this.sendMessage({
+                type: 'connection-ready'
+            });
         });
 
         this.connection.on('data', (data) => {
+            if (data.type === 'connection-ready') {
+                console.log('Connection established and ready');
+            }
             if (this.gameManager) {
                 this.gameManager.handleMessage(data);
             }

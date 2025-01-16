@@ -22,6 +22,11 @@ class GameManager {
         document.getElementById('game-selection').classList.add('hidden');
         document.getElementById('game-container').classList.remove('hidden');
 
+        if (this.currentGame) {
+            this.currentGame.cleanup();
+            this.currentGame = null;
+        }
+
         switch(gameType) {
             case 'tictactoe':
                 this.currentGame = new TicTacToe(this);
@@ -32,6 +37,9 @@ class GameManager {
             case 'connectfour':
                 this.currentGame = new ConnectFour(this);
                 break;
+            case 'memory':
+                this.currentGame = new Memory(this);
+                break;
         }
 
         if (this.connectionManager.isHost) {
@@ -39,17 +47,28 @@ class GameManager {
                 type: 'game-start',
                 game: gameType
             });
+        } else {
+            this.connectionManager.sendMessage({
+                type: 'game-start-ack',
+                game: gameType
+            });
         }
     }
 
     handleMessage(message) {
-        if (message.type === 'game-start') {
-            this.startGame(message.game);
-            return;
-        }
-
-        if (this.currentGame) {
-            this.currentGame.handleMessage(message);
+        switch(message.type) {
+            case 'game-start':
+                this.startGame(message.game);
+                break;
+            case 'game-start-ack':
+                if (this.currentGame) {
+                    this.currentGame.initializeGame();
+                }
+                break;
+            default:
+                if (this.currentGame) {
+                    this.currentGame.handleMessage(message);
+                }
         }
     }
 
