@@ -57,60 +57,99 @@ class Memory {
 
     render() {
         this.boardElement.innerHTML = '';
+        
+        const gameContainer = document.createElement('div');
+        gameContainer.classList.add('max-w-4xl', 'mx-auto', 'p-4');
+        
         const scoreBoard = document.createElement('div');
-        scoreBoard.classList.add('flex', 'justify-center', 'items-center', 'mb-4', 'gap-8');
-        const scoreP1 = document.createElement('div');
-        scoreP1.id = 'score-p0';
-        scoreP1.className = 'p-2 bg-gray-700/50 rounded';
-        scoreP1.innerText = `Player 1: ${this.scores[0]}`;
-        const scoreP2 = document.createElement('div');
-        scoreP2.id = 'score-p1';
-        scoreP2.className = 'p-2 bg-gray-700/50 rounded';
-        scoreP2.innerText = `Player 2: ${this.scores[1]}`;
-        scoreBoard.appendChild(scoreP1);
-        scoreBoard.appendChild(scoreP2);
-        this.boardElement.appendChild(scoreBoard);
+        scoreBoard.classList.add('grid', 'grid-cols-2', 'gap-4', 'mb-6');
+        
+        const players = [
+            { id: 0, name: 'Player 1', color: 'blue' },
+            { id: 1, name: 'Player 2', color: 'red' }
+        ];
+        
+        players.forEach(player => {
+            const playerCard = document.createElement('div');
+            playerCard.classList.add(
+                'p-4',
+                'rounded-xl',
+                'transition-all',
+                'duration-300'
+            );
+            
+            if (this.currentPlayerIndex === player.id) {
+                playerCard.classList.add('bg-gray-700', 'shadow-lg', 'scale-105');
+            } else {
+                playerCard.classList.add('bg-gray-800/50');
+            }
+            
+            playerCard.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="text-lg font-semibold">${player.name}</span>
+                    <span class="text-2xl font-bold">${this.scores[player.id]}</span>
+                </div>
+            `;
+            scoreBoard.appendChild(playerCard);
+        });
+        
         const turnIndicator = document.createElement('div');
         turnIndicator.id = 'turn-indicator';
-        turnIndicator.className = 'text-center mb-4';
-        this.boardElement.appendChild(turnIndicator);
+        turnIndicator.className = 'text-center mb-6 text-xl font-semibold bg-gray-700/30 py-2 rounded-lg';
+        
         const grid = document.createElement('div');
         grid.classList.add(
-            'grid', 
-            'grid-cols-4', 
-            'gap-4', 
-            'justify-center', 
+            'grid',
+            'grid-cols-4',
+            'gap-4',
+            'justify-center',
             'items-center'
         );
+        
         this.deck.forEach((card, index) => {
             const cardDiv = document.createElement('div');
             cardDiv.classList.add(
+                'aspect-square',
                 'cursor-pointer',
-                'bg-gray-700',
-                'p-4',
-                'rounded-lg',
-                'flex',
-                'items-center',
-                'justify-center',
+                'rounded-xl',
                 'transition-all',
-                'relative'
+                'duration-300',
+                'transform',
+                'hover:scale-105'
             );
-            cardDiv.style.height = '100px';
-            cardDiv.dataset.index = index;
+            
             if (card.revealed || card.matched) {
+                cardDiv.classList.add('bg-gray-700');
                 cardDiv.innerHTML = `
-                    <i class="fas ${card.icon} ${card.color} text-3xl"></i>
+                    <div class="w-full h-full flex items-center justify-center">
+                        <i class="fas ${card.icon} ${card.color} text-4xl ${card.matched ? 'opacity-75' : ''}"></i>
+                    </div>
                 `;
             } else {
-                cardDiv.innerHTML = `<span class="text-xl text-gray-400">?</span>`;
+                cardDiv.classList.add('bg-gradient-to-br', 'from-gray-700', 'to-gray-800', 'shadow-lg');
+                cardDiv.innerHTML = `
+                    <div class="w-full h-full flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-full bg-gray-600/50 flex items-center justify-center">
+                            <span class="text-gray-400">?</span>
+                        </div>
+                    </div>
+                `;
             }
+            
             if (this.localPlayerIndex === this.currentPlayerIndex && !card.matched) {
                 cardDiv.addEventListener('click', () => this.handleCardClick(index));
             }
+            
+            cardDiv.dataset.index = index;
             grid.appendChild(cardDiv);
         });
-        this.boardElement.appendChild(grid);
-        this.updateUI(); 
+        
+        gameContainer.appendChild(scoreBoard);
+        gameContainer.appendChild(turnIndicator);
+        gameContainer.appendChild(grid);
+        this.boardElement.appendChild(gameContainer);
+        
+        this.updateUI();
     }
 
     handleCardClick(index) {
@@ -220,19 +259,14 @@ class Memory {
     updateUI() {
         const turnIndicator = document.getElementById('turn-indicator');
         if (!turnIndicator) return;
-        if (this.currentPlayerIndex === 0) {
-            turnIndicator.innerText = 'Player 1\'s Turn';
-        } else {
-            turnIndicator.innerText = 'Player 2\'s Turn';
-        }
-        const scoreP0 = document.getElementById('score-p0');
-        const scoreP1 = document.getElementById('score-p1');
-        if (scoreP0) {
-            scoreP0.innerText = `Player 1: ${this.scores[0]}`;
-        }
-        if (scoreP1) {
-            scoreP1.innerText = `Player 2: ${this.scores[1]}`;
-        }
+        
+        const currentPlayer = this.currentPlayerIndex === 0 ? 'Player 1' : 'Player 2';
+        turnIndicator.innerHTML = `
+            <div class="flex items-center justify-center gap-2">
+                <span class="text-gray-300">Current Turn:</span>
+                <span class="font-bold">${currentPlayer}</span>
+            </div>
+        `;
     }
 
     cleanup() {
