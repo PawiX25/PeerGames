@@ -49,6 +49,9 @@ class GameManager {
             case 'pong':
                 this.currentGame = new Pong(this);
                 break;
+            case 'snake':
+                this.currentGame = new Snake(this);
+                break;
         }
 
         if (this.connectionManager.isHost) {
