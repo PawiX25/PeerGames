@@ -8,27 +8,69 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .game-card {
-            transition: all 0.3s ease;
-            transform: translateY(0);
-        }
-        .game-card:hover {
-            transform: translateY(-5px);
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .piece {
-            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                        background-color 0.3s ease;
-            will-change: transform;
-            backface-visibility: hidden;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #13151a 0%, #1f2937 100%);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(192, 132, 252, 0.1) 100%);
+        }
+
+        .game-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .card-icon {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(192, 132, 252, 0.2) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glow {
+            position: relative;
+        }
+
+        .glow::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(135deg, #38bdf8 0%, #c084fc 100%);
+            filter: blur(20px);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .glow:hover::after {
+            opacity: 0.2;
+        }
+
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
         @keyframes dropBounce {
             0% { transform: translateY(-400%) scale(1); }
             70% { transform: translateY(0) scale(1.1); }
@@ -60,161 +102,226 @@
             transform-style: preserve-3d;
             perspective: 1000px;
         }
+
+        .copy-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-button .success-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-button .copy-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .copy-button.success .copy-icon {
+            transform: scale(0);
+            opacity: 0;
+        }
+        
+        .copy-button.success .success-icon {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-        <header class="text-center mb-12">
-            <h1 class="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
-                PeerGames
-            </h1>
-            <p class="text-gray-400 text-xl">Connect & Play Instantly</p>
-        </header>
-
-        <div id="game-selection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 fade-in">
-            <div class="game-card bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl cursor-pointer border border-gray-700"
-                 data-game="tictactoe">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-hashtag text-2xl text-blue-500"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold">Tic Tac Toe</h3>
-                        <p class="text-gray-400">Classic 3x3 game</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-gray-400">
-                    <i class="fas fa-clock"></i> 2-5 min
-                    <span class="mx-2">•</span>
-                    <i class="fas fa-user-friends"></i> 2 players
-                </div>
-            </div>
-
-            <div class="game-card bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl cursor-pointer border border-gray-700"
-                 data-game="chess">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-chess-king text-2xl text-purple-500"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold">Chess</h3>
-                        <p class="text-gray-400">Traditional chess game</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-gray-400">
-                    <i class="fas fa-clock"></i> 10-30 min
-                    <span class="mx-2">•</span>
-                    <i class="fas fa-user-friends"></i> 2 players
-                </div>
-            </div>
-
-            <div class="game-card bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl cursor-pointer border border-gray-700"
-                 data-game="connectfour">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-yellow-600/20 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-circle text-2xl text-yellow-500"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold">Connect Four</h3>
-                        <p class="text-gray-400">Classic vertical strategy game</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-gray-400">
-                    <i class="fas fa-clock"></i> 5-10 min
-                    <span class="mx-2">•</span>
-                    <i class="fas fa-user-friends"></i> 2 players
-                </div>
-            </div>
-
-            <div class="game-card bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl cursor-pointer border border-gray-700"
-                 data-game="memory">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-brain text-2xl text-green-500"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold">Memory Game</h3>
-                        <p class="text-gray-400">Find matching pairs</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-gray-400">
-                    <i class="fas fa-clock"></i> 5-10 min
-                    <span class="mx-2">•</span>
-                    <i class="fas fa-user-friends"></i> 2 players
-                </div>
-            </div>
-
-            <div class="game-card bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl cursor-pointer border border-gray-700"
-                 data-game="pong">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-pink-600/20 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-table-tennis-paddle-ball text-2xl text-pink-500"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold">Pong</h3>
-                        <p class="text-gray-400">Classic table tennis game</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-gray-400">
-                    <i class="fas fa-clock"></i> 3-5 min
-                    <span class="mx-2">•</span>
-                    <i class="fas fa-user-friends"></i> 2 players
-                </div>
-            </div>
-
-            <div class="game-card bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl cursor-pointer border border-gray-700"
-                 data-game="snake">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-ghost text-2xl text-green-500 transform rotate-90"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold">Snake</h3>
-                        <p class="text-gray-400">Classic retro game</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-gray-400">
-                    <i class="fas fa-clock"></i> 3-10 min
-                    <span class="mx-2">•</span>
-                    <i class="fas fa-user-friends"></i> 1-2 players (host controls)
-                </div>
-            </div>
+<body class="min-h-screen text-white">
+    <div class="relative">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute -top-40 -right-40 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+            <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style="animation-delay: -2s"></div>
         </div>
+        
+        <div class="container mx-auto px-4 py-12 relative z-10">
+            <header class="text-center mb-20">
+                <div class="hero-gradient rounded-2xl p-12 mb-12">
+                    <h1 class="text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+                        PeerGames
+                    </h1>
+                    <p class="text-gray-300 text-xl max-w-2xl mx-auto leading-relaxed">
+                        Experience seamless P2P gaming with friends. No servers, no waiting - just pure fun.
+                    </p>
+                </div>
+            </header>
 
-        <div id="connection-section" class="mb-12 fade-in hidden">
-            <div class="max-w-lg mx-auto bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl shadow-2xl border border-gray-700">
-                <div id="peer-id" class="mb-6 text-center"></div>
-                <div class="flex flex-col gap-4">
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                            <i class="fas fa-user-plus text-gray-400"></i>
+            <div id="game-selection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <div class="game-card p-6 rounded-2xl glow cursor-pointer" data-game="tictactoe">
+                    <div class="flex items-center gap-6 mb-6">
+                        <div class="card-icon w-16 h-16 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-hashtag text-3xl text-blue-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold">Tic Tac Toe</h3>
+                            <p class="text-gray-400 mt-1">Classic 3x3 game</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm text-gray-400">
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-clock"></i> 2-5 min
                         </span>
-                        <input type="text" id="connect-id" 
-                               placeholder="Enter friend's Peer ID" 
-                               class="w-full pl-10 pr-4 py-3 bg-gray-700/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        <span class="w-1 h-1 bg-gray-500 rounded-full"></span>
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-user-friends"></i> 2 players
+                        </span>
                     </div>
-                    <button id="connect-btn" 
-                            class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center gap-2">
-                        <i class="fas fa-plug"></i>
-                        Connect
-                    </button>
                 </div>
-            </div>
-        </div>
 
-        <div id="game-container" class="hidden fade-in">
-            <div class="flex items-center justify-between mb-6">
-                <button id="leave-game" 
-                        class="bg-red-600/80 px-6 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2">
-                    <i class="fas fa-door-open"></i>
-                    Leave Game
-                </button>
-                <div id="player-status" class="bg-gray-800/50 px-4 py-2 rounded-lg">
-                    <i class="fas fa-circle text-green-500"></i>
-                    <span class="ml-2">Connected</span>
+                <div class="game-card p-6 rounded-2xl glow cursor-pointer" data-game="chess">
+                    <div class="flex items-center gap-6 mb-6">
+                        <div class="card-icon w-16 h-16 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-chess-king text-3xl text-purple-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold">Chess</h3>
+                            <p class="text-gray-400 mt-1">Traditional chess game</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm text-gray-400">
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-clock"></i> 10-30 min
+                        </span>
+                        <span class="w-1 h-1 bg-gray-500 rounded-full"></span>
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-user-friends"></i> 2 players
+                        </span>
+                    </div>
+                </div>
+
+                <div class="game-card p-6 rounded-2xl glow cursor-pointer" data-game="connectfour">
+                    <div class="flex items-center gap-6 mb-6">
+                        <div class="card-icon w-16 h-16 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-circle text-3xl text-yellow-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold">Connect Four</h3>
+                            <p class="text-gray-400 mt-1">Classic vertical strategy game</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm text-gray-400">
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-clock"></i> 5-10 min
+                        </span>
+                        <span class="w-1 h-1 bg-gray-500 rounded-full"></span>
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-user-friends"></i> 2 players
+                        </span>
+                    </div>
+                </div>
+
+                <div class="game-card p-6 rounded-2xl glow cursor-pointer" data-game="memory">
+                    <div class="flex items-center gap-6 mb-6">
+                        <div class="card-icon w-16 h-16 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-brain text-3xl text-green-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold">Memory Game</h3>
+                            <p class="text-gray-400 mt-1">Find matching pairs</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm text-gray-400">
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-clock"></i> 5-10 min
+                        </span>
+                        <span class="w-1 h-1 bg-gray-500 rounded-full"></span>
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-user-friends"></i> 2 players
+                        </span>
+                    </div>
+                </div>
+
+                <div class="game-card p-6 rounded-2xl glow cursor-pointer" data-game="pong">
+                    <div class="flex items-center gap-6 mb-6">
+                        <div class="card-icon w-16 h-16 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-table-tennis-paddle-ball text-3xl text-pink-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold">Pong</h3>
+                            <p class="text-gray-400 mt-1">Classic table tennis game</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm text-gray-400">
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-clock"></i> 3-5 min
+                        </span>
+                        <span class="w-1 h-1 bg-gray-500 rounded-full"></span>
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-user-friends"></i> 2 players
+                        </span>
+                    </div>
+                </div>
+
+                <div class="game-card p-6 rounded-2xl glow cursor-pointer" data-game="snake">
+                    <div class="flex items-center gap-6 mb-6">
+                        <div class="card-icon w-16 h-16 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-ghost text-3xl text-green-400 transform rotate-90"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold">Snake</h3>
+                            <p class="text-gray-400 mt-1">Classic retro game</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm text-gray-400">
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-clock"></i> 3-10 min
+                        </span>
+                        <span class="w-1 h-1 bg-gray-500 rounded-full"></span>
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-user-friends"></i> 1-2 players (host controls)
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div id="game-board" class="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700 shadow-2xl"></div>
+
+            <div id="connection-section" class="hidden">
+                <div class="glass-panel max-w-xl mx-auto p-8 rounded-2xl">
+                    <div class="relative flex items-center justify-center gap-3 text-center mb-8 p-4 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10">
+                        <div id="peer-id"></div>
+                        <button class="copy-button w-8 h-8 rounded-lg bg-gray-700/50 hover:bg-gray-600/50 flex items-center justify-center transition-all">
+                            <span class="copy-icon">
+                                <i class="fas fa-copy text-gray-300"></i>
+                            </span>
+                            <span class="success-icon text-green-400">
+                                <i class="fas fa-check"></i>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="relative">
+                            <input type="text" id="connect-id" 
+                                   placeholder="Enter friend's Peer ID" 
+                                   class="w-full px-6 py-4 bg-gray-900/50 rounded-xl border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300">
+                            <i class="fas fa-user-plus absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                        <button id="connect-btn" 
+                                class="w-full bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-4 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-blue-500/25">
+                            Connect & Play
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="game-container" class="hidden fade-in">
+                <div class="flex items-center justify-between mb-6">
+                    <button id="leave-game" 
+                            class="bg-red-600/80 px-6 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2">
+                        <i class="fas fa-door-open"></i>
+                        Leave Game
+                    </button>
+                    <div id="player-status" class="bg-gray-800/50 px-4 py-2 rounded-lg">
+                        <i class="fas fa-circle text-green-500"></i>
+                        <span class="ml-2">Connected</span>
+                    </div>
+                </div>
+                <div id="game-board" class="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700 shadow-2xl"></div>
+            </div>
         </div>
     </div>
 
@@ -227,6 +334,18 @@
     <script src="games/pong.js"></script>
     <script src="games/snake.js"></script>
 
-
+    <script>
+        document.querySelector('.copy-button').addEventListener('click', async () => {
+            const peerId = document.querySelector('#peer-id span').textContent;
+            await navigator.clipboard.writeText(peerId);
+            
+            const button = document.querySelector('.copy-button');
+            button.classList.add('success');
+            
+            setTimeout(() => {
+                button.classList.remove('success');
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
