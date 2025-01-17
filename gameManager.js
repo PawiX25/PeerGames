@@ -46,6 +46,9 @@ class GameManager {
             case 'memory':
                 this.currentGame = new Memory(this);
                 break;
+            case 'pong':
+                this.currentGame = new Pong(this);
+                break;
         }
 
         if (this.connectionManager.isHost) {
